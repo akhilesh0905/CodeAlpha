@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        .gallery-container {
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .lightbox .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .lightbox .navigation {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .lightbox .navigation span {
+            font-size: 36px;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .lightbox .caption {
+            position: absolute;
+            bottom: 20px;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <div class="gallery">
+            <img src="image1.jpg" alt="Image 1" data-caption="This is Image 1" />
+            <img src="image2.jpg" alt="Image 2" data-caption="This is Image 2" />
+            <img src="image3.jpg" alt="Image 3" data-caption="This is Image 3" />
+            <img src="image4.jpg" alt="Image 4" data-caption="This is Image 4" />
+            <img src="image5.jpg" alt="Image 5" data-caption="This is Image 5" />
+            <img src="image6.jpg" alt="Image 6" data-caption="This is Image 6" />
+            <img src="image7.jpg" alt="Image 7" data-caption="This is Image 7" />
+            <img src="image8.jpg" alt="Image 8" data-caption="This is Image 8" />
+            <img src="image9.jpg" alt="Image 9" data-caption="This is Image 9" />
+            <img src="image10.jpg" alt="Image 10" data-caption="This is Image 10" />
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close" id="close">&times;</span>
+        <div class="navigation">
+            <span id="prev">&#10094;</span>
+            <span id="next">&#10095;</span>
+        </div>
+        <img id="lightbox-img" src="" alt="" />
+        <div class="caption" id="caption"></div>
+    </div>
+
+    <script>
+        const gallery = document.querySelectorAll('.gallery img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('close');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        const caption = document.getElementById('caption');
+
+        let currentIndex = 0;
+
+        function showImage(index) {
+            lightboxImg.src = gallery[index].src;
+            caption.textContent = gallery[index].getAttribute('data-caption');
+        }
+
+        gallery.forEach((img, index) => {
+            img.addEventListener('click', () => {
+                lightbox.style.display = 'flex';
+                currentIndex = index;
+                showImage(currentIndex);
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.style.display = 'none';
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg && e.target !== prevBtn && e.target !== nextBtn) {
+                lightbox.style.display = 'none';
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + gallery.length) % gallery.length;
+            showImage(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % gallery.length;
+            showImage(currentIndex);
+        });
+    </script>
+</body>
+</html>
+
+
